@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zomato - Bengaluru</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --zomato-red: #EF4F5F;
+            --zomato-red-dark: #D32F3F;
+            --text-main: #1C1C1C;
+            --text-muted: #696969;
+            --border-color: #E8E8E8;
+            --bg-main: #FFFFFF;
+            --bg-light: #F8F8F8;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- STICKY NAVBAR (Appears on scroll) --- */
+        .sticky-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--bg-main);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .sticky-nav.visible {
+            transform: translateY(0);
+        }
+
+        .sticky-logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--zomato-red);
+            font-style: italic;
+            letter-spacing: -1px;
+        }
+
+        .sticky-search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            gap: 10px;
+            width: 450px;
+        }
+
+        .sticky-search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .sticky-nav-actions {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .sticky-nav-actions a:hover {
+            color: var(--text-main);
+        }
+
+        /* --- 1. HERO SECTION --- */
+        header.hero-section {
+            position: relative;
+            height: 500px;
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px 60px;
+            color: white;
+        }
+
+        .hero-top {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .get-app-link {
+            font-size: 14px;
+            font-weight: 300;
+            border-bottom: 1px solid white;
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .get-app-link:hover {
+            opacity: 0.8;
+        }
+
+        .hero-nav-right {
+            display: flex;
+            gap: 32px;
+            font-size: 18px;
+            font-weight: 300;
+            align-items: center;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .hero-center {
+            max-width: 760px;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            width: 100%;
+        }
+
+        .hero-logo {
+            font-size: 64px;
+            font-weight: 800;
+            font-style: italic;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .hero-tagline {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+        }
+
+        .search-bar-container {
+            background: white;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            border-radius: var(--radius-md);
+            padding: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            color: var(--text-main);
+        }
+
+        .location-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 16px;
+            min-width: 220px;
+            border-right: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .location-selector i {
+            color: var(--zomato-red);
+            font-size: 16px;
+        }
+
+        .location-selector select {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            width: 100%;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        .hero-search-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            flex-grow: 1;
+        }
+
+        .hero-search-input-wrapper i {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .hero-search-input-wrapper input {
+            border: none;
+            outline: none;
+            font-size: 15px;
+            width: 100%;
+            background: transparent;
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* --- 2. THREE BIG CARDS --- */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .big-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
+        }
+
+        .big-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .big-card-img {
+            height: 160px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .big-card-content {
+            padding: 20px;
+        }
+
+        .big-card-content h3 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .big-card-content p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* --- 3. COLLECTIONS --- */
+        .section-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .red-link {
+            color: var(--zomato-red);
+            font-size: 15px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .red-link:hover {
+            text-decoration: underline;
+        }
+
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 60px;
+        }
+
+        .collection-card {
+            position: relative;
+            height: 320px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .collection-card:hover {
+            transform: scale(1.02);
+        }
+
+        .collection-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .collection-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.85) 100%);
+        }
+
+        .collection-info {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            color: white;
+            z-index: 2;
+        }
+
+        .collection-info h4 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .collection-info p {
+            font-size: 13px;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* --- 4. FILTER CHIPS ROW --- */
+        .filters-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .filter-chip {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover {
+            background: var(--bg-light);
+        }
+
+        .filter-chip.active {
+            background: #FCF5F6;
+            border-color: var(--zomato-red);
+            color: var(--zomato-red);
+            font-weight: 500;
+        }
+
+        /* --- 5. RESTAURANT CARDS GRID --- */
+        .restaurants-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .restaurant-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            padding: 12px;
+        }
+
+        .restaurant-card:hover {
+            border-color: var(--border-color);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .res-img-wrap {
+            position: relative;
+            height: 240px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--bg-light);
+        }
+
+        .res-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .res-offer-ribbon {
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            background: #234582;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .res-details {
+            padding-top: 14px;
+        }
+
+        .res-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .res-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+            max-width: 70%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .res-rating-badge {
+            background: #24963F;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .res-sub-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .res-cuisine {
+            max-width: 65%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .res-price {
+            font-weight: 400;
+        }
+
+        .res-divider {
+            border-top: 1px dashed var(--border-color);
+            margin-top: 10px;
+            padding-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .res-divider i {
+            color: #E23744;
+            font-size: 14px;
+        }
+
+        /* --- 6. EXPLORE OPTIONS NEAR ME & CUISINES --- */
+        .explore-section {
+            margin-bottom: 60px;
+        }
+
+        .explore-section h3 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .explore-accordions {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .explore-accordion-item {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .explore-accordion-item:hover {
+            border-color: #999;
+        }
+
+        .explore-accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text-main);
+        }
+
+        .cuisines-chips-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .cuisine-chip {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cuisine-chip:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+        }
+
+        /* --- 7. APP DOWNLOAD BANNER --- */
+        .app-download-banner {
+            background: #FFFBF7;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 60px 0;
+            margin-bottom: 60px;
+        }
+
+        .app-download-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .app-mockup-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .phone-mockup {
+            width: 240px;
+            height: 480px;
+            background: #1C1C1C;
+            border-radius: 36px;
+            padding: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .phone-screen i {
+            font-size: 48px;
+            color: var(--zomato-red);
+        }
+
+        .app-info-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .app-info-content h2 {
+            font-size: 44px;
+            font-weight: 500;
+            line-height: 1.2;
+            color: var(--text-main);
+        }
+
+        .app-info-content p {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 30px;
+            font-size: 15px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            accent-color: var(--zomato-red);
+            width: 18px;
+            height: 18px;
+        }
+
+        .download-input-row {
+            display: flex;
+            gap: 12px;
+            max-width: 480px;
+        }
+
+        .download-input-row input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .download-input-row button {
+            background: var(--zomato-red);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .download-input-row button:hover {
+            background: var(--zomato-red-dark);
+        }
+
+        .store-badges {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .store-badge-btn {
+            background: #1C1C1C;
+            color: white;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .store-badge-btn i {
+            font-size: 22px;
+        }
+
+        /* --- 8. FOOTER --- */
+        footer {
+            background: #F8F8F8;
+            border-top: 1px solid var(--border-color);
+            padding: 60px 0 30px 0;
+            color: var(--text-main);
+        }
+
+        .footer-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-main);
+            font-style: italic;
+            letter-spacing: -1px;
+        }
+
+        .footer-dropdowns {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .footer-links-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .footer-col ul {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-col a {
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--text-main);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .social-icon-btn {
+            width: 28px;
+            height: 28px;
+            background: #1C1C1C;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: opacity 0.2s;
+        }
+
+        .social-icon-btn:hover {
+            opacity: 0.8;
+        }
+
+        .footer-divider {
+            border-top: 1px solid var(--border-color);
+            margin: 30px 0;
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media(max-width: 1024px) {
+            .cards-grid, .restaurants-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .collections-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-links-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .app-download-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .download-input-row, .store-badges, .radio-group {
+                justify-content: center;
+            }
+        }
+
+        @media(max-width: 768px) {
+            header.hero-section {
+                padding: 20px;
+                height: 450px;
+            }
+            .hero-nav-right {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            .hero-tagline {
+                font-size: 22px;
+            }
+            .search-bar-container {
+                flex-direction: column;
+                background: transparent;
+                box-shadow: none;
+                gap: 10px;
+            }
+            .location-selector, .hero-search-input-wrapper {
+                background: white;
+                border-radius: var(--radius-sm);
+                padding: 12px;
+                width: 100%;
+                border-right: none;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            .cards-grid, .restaurants-grid, .collections-grid {
+                grid-template-columns: 1fr;
+            }
+            .sticky-search-box {
+                display: none;
+            }
+            .footer-links-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-top-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STICKY NAVBAR -->
+    <div class="sticky-nav" id="stickyNav">
+        <div class="sticky-logo">zomato</div>
+        <div class="sticky-search-box">
+            <i class="fa-solid fa-magnifying-glass" style="color: var(--zomato-red);"></i>
+            <input type="text" id="stickySearchInput" placeholder="Search for restaurant, cuisine or a dish" onkeyup="handleGlobalSearch(event)">
+        </div>
+        <div class="sticky-nav-actions">
+            <a href="#">Log in</a>
+            <a href="#">Sign up</a>
+        </div>
+    </div>
+
+    <!-- 1. HERO SECTION -->
+    <header class="hero-section">
+        <div class="hero-top">
+            <a href="#" class="get-app-link">Get the App</a>
+            <div class="hero-nav-right">
+                <a href="#">Investor Relations</a>
+                <a href="#">Add restaurants</a>
+                <a href="#">Log in</a>
+                <a href="#">Sign up</a>
+            </div>
+            <div class="hamburger"><i class="fa-solid fa-bars"></i></div>
+        </div>
+        
+        <div class="hero-center">
+            <h1 class="hero-logo">zomato</h1>
+            <p class="hero-tagline">Discover the best food & drinks in Bengaluru</p>
+            <div class="search-bar-container">
+                <div class="location-selector">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <select id="locationSelect">
+                        <option value="bengaluru">Bengaluru</option>
+                        <option value="indiranagar">Indiranagar, Bengaluru</option>
+                        <option value="koramangala">Koramangala, Bengaluru</option>
+                        <option value="mgroad">MG Road, Bengaluru</option>
+                    </select>
+                </div>
+                <div class="hero-search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="heroSearchInput" placeholder="Search for restaurant, cuisine or a dish" onkeyup="handleGlobalSearch(event)">
+                </div>
+            </div>
+        </div>
+        <div></div> <!-- spacer -->
+    </header>
+
+    <div class="container">
+        <!-- 2. THREE BIG CARDS -->
+        <section class="cards-grid">
+            <div class="big-card" onclick="scrollToRestaurants()">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&auto=format&fit=crop&q=80" alt="Order Online" class="big-card-img">
+                <div class="big-card-content">
+                    <h3>Order Online</h3>
+                    <p>Stay home and order to your doorstep</p>
+                </div>
+            </div>
+            <div class="big-card" onclick="alert('Navigating to Dining Out section...')">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80" alt="Dining" class="big-card-img">
+                <div class="big-card-content">
+                    <h3>Dining</h3>
+                    <p>View the city's favourite dining venues</p>
+                </div>
+            </div>
+            <div class="big-card" onclick="alert('Navigating to Nightlife section...')">
+                <img src="https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=500&auto=format&fit=crop&q=80" alt="Nightlife and Clubs" class="big-card-img">
+                <div class="big-card-content">
+                    <h3>Nightlife and Clubs</h3>
+                    <p>Explore the city's top nightlife outlets</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. COLLECTIONS -->
+        <section style="margin-bottom: 60px;">
+            <div class="section-header-row">
+                <div>
+                    <h2 class="section-title">Collections</h2>
+                    <p class="section-subtitle">Explore curated lists of top restaurants, cafes, pubs, and bars in Bengaluru, based on trends</p>
+                </div>
+                <a href="#" class="red-link">All collections in Bengaluru <i class="fa-solid fa-caret-right"></i></a>
+            </div>
+
+            <div class="collections-grid">
+                <div class="collection-card">
+                    <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=500&auto=format&fit=crop&q=80" alt="Top Trending">
+                    <div class="collection-gradient"></div>
+                    <div class="collection-info">
+                        <h4>Top Trending Spots</h4>
+                        <p>32 Places <i class="fa-solid fa-caret-right"></i></p>
+                    </div>
+                </div>
+                <div class="collection-card">
+                    <img src="https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?w=500&auto=format&fit=crop&q=80" alt="Insta-worthy">
+                    <div class="collection-gradient"></div>
+                    <div class="collection-info">
+                        <h4>Best Insta-worthy Places</h4>
+                        <p>18 Places <i class="fa-solid fa-caret-right"></i></p>
+                    </div>
+                </div>
+                <div class="collection-card">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80" alt="Newly Opened">
+                    <div class="collection-gradient"></div>
+                    <div class="collection-info">
+                        <h4>Newly Opened Places</h4>
+                        <p>12 Places <i class="fa-solid fa-caret-right"></i></p>
+                    </div>
+                </div>
+                <div class="collection-card">
+                    <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&auto=format&fit=crop&q=80" alt="Microbreweries">
+                    <div class="collection-gradient"></div>
+                    <div class="collection-info">
+                        <h4>Great Microbreweries</h4>
+                        <p>24 Places <i class="fa-solid fa-caret-right"></i></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. FILTER CHIPS ROW -->
+        <h2 class="section-title" id="restaurantsHeading">Best Food in Bengaluru</h2>
+        <div class="filters-container" id="filterChipsContainer">
+            <div class="filter-chip active" onclick="applyFilter('all', this)"><i class="fa-solid fa-sliders"></i> All</div>
+            <div class="filter-chip" onclick="applyFilter('veg', this)">Pure Veg</div>
+            <div class="filter-chip" onclick="applyFilter('rating', this)">Rating 4.0+</div>
+            <div class="filter-chip" onclick="applyFilter('fast', this)">Fast Delivery</div>
+            <div class="filter-chip" onclick="applyFilter('offers', this)">Offers</div>
+        </div>
+
+        <!-- 5. RESTAURANT CARDS GRID -->
+        <div class="restaurants-grid" id="restaurantsGrid">
+            <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- 6. EXPLORE OPTIONS NEAR ME -->
+        <section class="explore-section">
+            <h3>Explore options near me</h3>
+            <div class="explore-accordions">
+                <div class="explore-accordion-item">
+                    <div class="explore-accordion-header">
+                        <span>Popular cuisines near me</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="cuisines-chips-grid">
+                        <span class="cuisine-chip">Bakery food near me</span>
+                        <span class="cuisine-chip">Beverages near me</span>
+                        <span class="cuisine-chip">Biryani near me</span>
+                        <span class="cuisine-chip">Burger near me</span>
+                        <span class="cuisine-chip">Chinese near me</span>
+                        <span class="cuisine-chip">Desserts near me</span>
+                        <span class="cuisine-chip">Ice Cream near me</span>
+                        <span class="cuisine-chip">Kebab near me</span>
+                        <span class="cuisine-chip">Momos near me</span>
+                        <span class="cuisine-chip">Mughlai near me</span>
+                        <span class="cuisine-chip">North Indian near me</span>
+                        <span class="cuisine-chip">Pizza near me</span>
+                        <span class="cuisine-chip">Rolls near me</span>
+                        <span class="cuisine-chip">Sandwich near me</span>
+                        <span class="cuisine-chip">Shake near me</span>
+                        <span class="cuisine-chip">South Indian near me</span>
+                        <span class="cuisine-chip">Street Food near me</span>
+                    </div>
+                </div>
+                <div class="explore-accordion-item">
+                    <div class="explore-accordion-header">
+                        <span>Popular restaurant types near me</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="explore-accordion-item">
+                    <div class="explore-accordion-header">
+                        <span>Top Restaurant Chains</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="explore-accordion-item">
+                    <div class="explore-accordion-header">
+                        <span>Cities We Deliver To</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 7. APP DOWNLOAD BANNER SECTION -->
+    <section class="app-download-banner">
+        <div class="app-download-container">
+            <div class="app-mockup-wrapper">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <i class="fa-solid fa-utensils"></i>
+                        <h4 style="font-size: 16px; font-weight: 600;">Zomato App</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);">Manage orders, track delivery & explore restaurants on the go.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="app-info-content">
+                <h2>Get the Zomato app</h2>
+                <p>We will send you a link, open it on your phone to download the app</p>
+                <div class="radio-group">
+                    <label><input type="radio" name="contactType" checked> Email</label>
+                    <label><input type="radio" name="contactType"> Phone</label>
+                </div>
+                <div class="download-input-row">
+                    <input type="text" placeholder="Email">
+                    <button onclick="alert('Download link sent successfully!')">Share App Link</button>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: -10px;">Download app from</p>
+                <div class="store-badges">
+                    <div class="store-badge-btn"><i class="fa-brands fa-apple"></i> App Store</div>
+                    <div class="store-badge-btn"><i class="fa-brands fa-google-play"></i> Google Play</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-top-row">
+                <div class="footer-logo">zomato</div>
+                <div class="footer-dropdowns">
+                    <select class="footer-select">
+                        <option>🇮🇳 India</option>
+                        <option>🇦🇪 UAE</option>
+                        <option>🇺🇸 United States</option>
+                    </select>
+                    <select class="footer-select">
+                        <option>English</option>
+                        <option>हिंदी</option>
+                        <option>Español</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="footer-links-grid">
+                <div class="footer-col">
+                    <h4>About Zomato</h4>
+                    <ul>
+                        <li><a href="#">Who We Are</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Work With Us</a></li>
+                        <li><a href="#">Investor Relations</a></li>
+                        <li><a href="#">Report Fraud</a></li>
+                        <li><a href="#">Press Kit</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>ZOMAVERSE</h4>
+                    <ul>
+                        <li><a href="#">Zomato</a></li>
+                        <li><a href="#">Blinkit</a></li>
+                        <li><a href="#">District</a></li>
+                        <li><a href="#">Feeding India</a></li>
+                        <li><a href="#">Hyperpure</a></li>
+                        <li><a href="#">Zomato Live</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>For Restaurants</h4>
+                    <ul>
+                        <li><a href="#">Partner With Us</a></li>
+                        <li><a href="#">Apps For You</a></li>
+                    </ul>
+                    <h4 style="margin-top: 24px;">For Enterprises</h4>
+                    <ul>
+                        <li><a href="#">Zomato Enterprise</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Learn More</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Sitemap</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Social Links</h4>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon-btn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon-btn"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-icon-btn"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="social-icon-btn"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="social-icon-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <img src="https://b.zmtcdn.com/data/web/apple_store_icon_1.png" alt="App Store" style="width: 120px; display: block; margin-bottom: 8px;">
+                        <img src="https://b.zmtcdn.com/data/web/play_store_icon_1.png" alt="Google Play" style="width: 120px; display: block;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-copyright">
+                By continuing past this page, you agree to our Terms of Service, Cookie Policy, Privacy Policy and Content Policies. All trademarks are properties of their respective owners. 2008-2026 © Zomato™ Ltd. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Restaurant Database Array (at least 9 cards)
+        const restaurants = [
+            {
+                id: 1,
+                name: "Truffles",
+                cuisine: "Burger, Fast Food, American, Desserts",
+                rating: 4.5,
+                deliveryTime: "29 min",
+                priceForTwo: "₹850 for two",
+                offer: "60% OFF up to ₹120",
+                isVeg: false,
+                isFast: true,
+                hasOffer: true,
+                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&auto=format&fit=crop&q=80",
+                popularText: "Popular in your area"
+            },
+            {
+                id: 2,
+                name: "Meghana Foods",
+                cuisine: "Biryani, North Indian, Seafood, Chinese",
+                rating: 4.3,
+                deliveryTime: "24 min",
+                priceForTwo: "₹700 for two",
+                offer: "Flat ₹150 OFF",
+                isVeg: false,
+                isFast: true,
+                hasOffer: true,
+                image: "https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=500&auto=format&fit=crop&q=80",
+                popularText: "Best Biryani in town"
+            },
+            {
+                id: 3,
+                name: "Toit",
+                cuisine: "Microbrewery, Italian, Pizza, Fast Food",
+                rating: 4.6,
+                deliveryTime: "40 min",
+                priceForTwo: "₹1,500 for two",
+                offer: "20% OFF on total bill",
+                isVeg: false,
+                isFast: false,
+                hasOffer: true,
+                image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&auto=format&fit=crop&q=80",
+                popularText: "Legendary Microbrewery"
+            },
+            {
+                id: 4,
+                name: "MTR - Maiyas",
+                cuisine: "South Indian, Sweets, Street Food",
+                rating: 4.4,
+                deliveryTime: "20 min",
+                priceForTwo: "₹300 for two",
+                offer: "Free Delivery",
+                isVeg: true,
+                isFast: true,
+                hasOffer: true,
+                image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500&auto=format&fit=crop&q=80",
+                popularText: "Authentic Filter Coffee & Dosa"
+            },
+            {
+                id: 5,
+                name: "Empire Restaurant",
+                cuisine: "North Indian, Biryani, Kebabs, Mughlai",
+                rating: 4.1,
+                deliveryTime: "32 min",
+                priceForTwo: "₹750 for two",
+                offer: "50% OFF up to ₹100",
+                isVeg: false,
+                isFast: true,
+                hasOffer: true,
+                image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80",
+                popularText: "Late Night Delivery Hub"
+            },
+            {
+                id: 6,
+                name: "A2B - Adyar Ananda Bhavan",
+                cuisine: "South Indian, North Indian, Sweets, Street Food",
+                rating: 4.2,
+                deliveryTime: "26 min",
+                priceForTwo: "₹400 for two",
+                offer: "Flat ₹75 OFF",
+                isVeg: true,
+                isFast: true,
+                hasOffer: true,
+                image: "https://images.unsplash.com/photo-1610192244261-3f33de3b55e4?w=500&auto=format&fit=crop&q=80",
+                popularText: "Pure Veg Specialist"
+            },
+            {
+                id: 7,
+                name: "Third Wave Coffee Roasters",
+                cuisine: "Cafe, Coffee, Beverages, Desserts",
+                rating: 4.5,
+                deliveryTime: "22 min",
+                priceForTwo: "₹600 for two",
+                offer: "Buy 1 Get 1 Free",
+                isVeg: true,
+                isFast: true,
+                hasOffer: true,
+                image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&auto=format&fit=crop&q=80",
+                popularText: "Artisan Coffee"
+            },
+            {
+                id: 8,
+                name: "Beijing Bites",
+                cuisine: "Chinese, Momos, Asian, Thai",
+                rating: 3.9,
+                deliveryTime: "35 min",
+                priceForTwo: "₹600 for two",
+                offer: "30% OFF up to ₹80",
+                isVeg: false,
+                isFast: false,
+                hasOffer: true,
+                image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=500&auto=format&fit=crop&q=80",
+                popularText: "Popular Chinese Diner"
+            },
+            {
+                id: 9,
+                name: "Glen's Bakehouse",
+                cuisine: "Bakery, Desserts, Continental, Cafe",
+                rating: 4.4,
+                deliveryTime: "30 min",
+                priceForTwo: "₹700 for two",
+                offer: "Free Dessert on orders above ₹500",
+                isVeg: true,
+                isFast: true,
+                hasOffer: true,
+                image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&auto=format&fit=crop&q=80",
+                popularText: "Famous Red Velvet Cupcakes"
+            }
+        ];
+
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // Render Restaurants Function
+        function renderRestaurants(dataToRender) {
+            const grid = document.getElementById('restaurantsGrid');
+            if(dataToRender.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">No restaurants found matching your criteria.</p>`;
+                return;
+            }
+
+            grid.innerHTML = dataToRender.map(res => `
+                <div class="restaurant-card" onclick="alert('Opening ${res.name} menu...')">
+                    <div class="res-img-wrap">
+                        <img src="${res.image}" alt="${res.name}">
+                        <div class="res-offer-ribbon">${res.offer}</div>
+                    </div>
+                    <div class="res-details">
+                        <div class="res-header-row">
+                            <h4 class="res-name">${res.name}</h4>
+                            <div class="res-rating-badge">${res.rating} <i class="fa-solid fa-star" style="font-size: 9px;"></i></div>
+                        </div>
+                        <div class="res-sub-row">
+                            <span class="res-cuisine">${res.cuisine}</span>
+                            <span class="res-price">${res.priceForTwo}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted);">
+                            <span></span>
+                            <span>${res.deliveryTime}</span>
+                        </div>
+                        <div class="res-divider">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>${res.popularText}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter and Search Logic
+        function applyFilter(filterType, element) {
+            currentFilter = filterType;
+            
+            // Highlight active chip
+            document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+            if(element) element.classList.add('active');
+
+            filterAndRender();
+        }
+
+        function handleGlobalSearch(event) {
+            searchQuery = event.target.value.toLowerCase().trim();
+            // Sync both search inputs
+            document.getElementById('heroSearchInput').value = event.target.value;
+            document.getElementById('stickySearchInput').value = event.target.value;
+
+            filterAndRender();
+        }
+
+        function filterAndRender() {
+            let filtered = restaurants.filter(res => {
+                const matchesSearch = res.name.toLowerCase().includes(searchQuery) || 
+                                      res.cuisine.toLowerCase().includes(searchQuery);
+                
+                let matchesFilter = true;
+                if(currentFilter === 'veg') matchesFilter = res.isVeg;
+                if(currentFilter === 'rating') matchesFilter = res.rating >= 4.4;
+                if(currentFilter === 'fast') matchesFilter = res.isFast;
+                if(currentFilter === 'offers') matchesFilter = res.hasOffer;
+
+                return matchesSearch && matchesFilter;
+            });
+
+            renderRestaurants(filtered);
+        }
+
+        function scrollToRestaurants() {
+            document.getElementById('restaurantsHeading').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sticky Navbar Scroll Listener
+        window.addEventListener('scroll', function() {
+            const stickyNav = document.getElementById('stickyNav');
+            const heroHeight = document.querySelector('.hero-section').offsetHeight;
+
+            if(window.scrollY > heroHeight - 80) {
+                stickyNav.classList.add('visible');
+            } else {
+                stickyNav.classList.remove('visible');
+            }
+        });
+
+        // Initialize Render on Load
+        window.onload = function() {
+            renderRestaurants(restaurants);
+        };
+    </script>
+</body>
+</html>
